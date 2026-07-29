@@ -1,6 +1,0 @@
-{
-  "name": "Personal Banking Dashboard",
-  "description": "A premium, responsive personal banking dashboard with analytics, interactive transaction tools, goal tracking, and financial management.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
