@@ -216,3 +216,21 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==========================================
+# Project Specific Ignore Rules
+# ==========================================
+
+# Ignore sensitive database credentials and secret keys
+.env
+backend/.env
+
+# Ignore virtual environments
+backend/venv/
+venv/
+.venv/
+
+# Explicitly ENSURE templates and frontend files ARE tracked
+!backend/templates/
+!backend/templates/*.html
+!frontend/
