@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign in | Premium Banking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-900: #0f172a;
+    --rose-300: #fda4af;
+    --rose-400: #fb7185;
+    --rose-500: #f43f5e;
+    --amber-400: #fbbf24;
+    --emerald-500: #10b981;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    min-height: 100vh;
+    width: 100%;
+    background: var(--slate-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  @media (min-width: 640px) { .page { padding: 64px 16px; } }
+
+  .wrapper { width: 100%; max-width: 448px; }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--slate-100);
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(241,245,249,0.6), 0 8px 10px -6px rgba(241,245,249,0.6);
+    padding: 32px 24px;
+  }
+  @media (min-width: 640px) { .card { padding: 40px; } }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .logo-badge {
+    height: 44px;
+    width: 44px;
+    border-radius: 12px;
+    background: var(--slate-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+  .title { font-size: 20px; font-weight: 600; color: var(--slate-900); letter-spacing: -0.01em; margin: 0; }
+  .subtitle { margin: 6px 0 0; font-size: 14px; color: var(--slate-500); }
+
+  .segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    background: var(--slate-100);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+  }
+  .segmented button {
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--slate-500);
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .segmented button.active { background: #fff; color: var(--slate-900); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .segmented button:hover:not(.active) { color: var(--slate-700); }
+
+  form { display: flex; flex-direction: column; gap: 20px; }
+
+  .label { display: block; font-size: 14px; font-weight: 500; color: var(--slate-700); margin-bottom: 6px; }
+
+  .input {
+    width: 100%;
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--slate-900);
+    outline: none;
+    font-family: inherit;
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  .input::placeholder { color: var(--slate-400); }
+  .input:focus { box-shadow: 0 0 0 2px var(--slate-900); border-color: transparent; }
+  .input.input-error { border-color: var(--rose-300); }
+  .input.input-error:focus { box-shadow: 0 0 0 2px var(--rose-400); }
+
+  .input-group {
+    display: flex;
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow .15s ease, border-color .15s ease;
+  }
+  .input-group:focus-within { box-shadow: 0 0 0 2px var(--slate-900); border-color: transparent; }
+  .input-group .prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 14px;
+    color: var(--slate-500);
+    background: var(--slate-50);
+    border-right: 1px solid var(--slate-200);
+    user-select: none;
+  }
+  .input-group input {
+    border: none;
+    flex: 1;
+    min-width: 0;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--slate-900);
+    outline: none;
+    font-family: inherit;
+  }
+  .input-group input::placeholder { color: var(--slate-400); }
+
+  .password-field { position: relative; }
+  .password-field .input { padding-right: 44px; }
+  .eye-toggle {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-right: 14px;
+    background: none;
+    border: none;
+    color: var(--slate-400);
+    cursor: pointer;
+  }
+  .eye-toggle:hover { color: var(--slate-600); }
+
+  .row-between { display: flex; align-items: center; justify-content: space-between; padding-top: 4px; }
+
+  .checkbox-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+  }
+  .checkbox-btn.align-start { align-items: flex-start; text-align: left; }
+  .checkbox-box {
+    height: 16px;
+    width: 16px;
+    min-width: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--slate-300);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color .15s ease, border-color .15s ease;
+  }
+  .checkbox-btn.align-start .checkbox-box { margin-top: 2px; }
+  .checkbox-btn:hover .checkbox-box { border-color: var(--slate-400); }
+  .checkbox-box.checked { background: var(--slate-900); border-color: var(--slate-900); }
+  .checkbox-box svg { display: none; color: #fff; }
+  .checkbox-box.checked svg { display: block; }
+  .checkbox-label { font-size: 14px; color: var(--slate-600); }
+  .checkbox-label b { font-weight: 500; color: var(--slate-900); }
+
+  .link { font-size: 14px; color: var(--slate-500); text-decoration: none; transition: color .15s ease; }
+  .link:hover { color: var(--slate-900); }
+
+  .btn-primary {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--slate-900);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 4px;
+    transition: background-color .15s ease;
+  }
+  .btn-primary:hover:not(:disabled) { background: #000; }
+  .btn-primary:disabled { opacity: .7; cursor: not-allowed; }
+
+  .divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+  .divider .line { height: 1px; flex: 1; background: var(--slate-200); }
+  .divider span { font-size: 12px; color: var(--slate-400); white-space: nowrap; }
+
+  .btn-google {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate-700);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color .15s ease;
+  }
+  .btn-google:hover { background: var(--slate-50); }
+  .hint { margin: 8px 0 0; text-align: center; font-size: 11px; color: var(--slate-400); }
+
+  .switch-text { margin: 28px 0 0; text-align: center; font-size: 14px; color: var(--slate-500); }
+  .switch-text button {
+    background: none; border: none; padding: 0;
+    font-weight: 500; color: var(--slate-900);
+    cursor: pointer; font-family: inherit; font-size: 14px;
+  }
+  .switch-text button:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+  .strength-meter { display: none; align-items: center; gap: 8px; margin-top: 8px; }
+  .strength-bars { display: flex; flex: 1; gap: 4px; }
+  .strength-bar { height: 4px; flex: 1; border-radius: 999px; background: var(--slate-100); transition: background-color .15s ease; }
+  .strength-bar.weak { background: var(--rose-400); }
+  .strength-bar.fair { background: var(--amber-400); }
+  .strength-bar.strong { background: var(--emerald-500); }
+  .strength-label { font-size: 11px; color: var(--slate-400); width: 44px; text-align: right; flex-shrink: 0; }
+
+  .error-text { display: none; margin: 6px 0 0; font-size: 12px; color: var(--rose-500); }
+
+  .trust { margin-top: 24px; text-align: center; }
+  .trust-line { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; color: var(--slate-400); margin: 0; }
+  .trust-links { margin: 8px 0 0; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 11px; color: var(--slate-400); }
+  .trust-links a { color: inherit; text-decoration: none; }
+  .trust-links a:hover { color: var(--slate-600); }
+  .trust-links .dot { color: var(--slate-300); }
+
+  .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="wrapper">
+    <div class="card">
+
+      <!-- ============ LOGIN VIEW ============ -->
+      <div id="loginView">
+        <div class="header">
+          <div class="logo-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+          </div>
+          <h1 class="title">Sign in to your account</h1>
+          <p class="subtitle">Enter your credentials to access your accounts</p>
+        </div>
+
+        <div class="segmented">
+          <button type="button" id="tabAccount" class="active">Account Number</button>
+          <button type="button" id="tabPhone">Phone Number</button>
+        </div>
+
+        <form id="loginForm">
+          <div id="fieldAccount">
+            <label class="label" for="accountNumber">Account Number</label>
+            <input class="input numeric-only" id="accountNumber" type="text" inputmode="numeric" maxlength="10" placeholder="10-digit Account Number" autocomplete="off" />
+          </div>
+
+          <div id="fieldPhone" style="display:none;">
+            <label class="label" for="phone">Registered Phone Number</label>
+            <div class="input-group">
+              <span class="prefix">+91</span>
+              <input class="numeric-only" id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="98765 43210" autocomplete="off" />
+            </div>
+          </div>
+
+          <div>
+            <label class="label" for="password">Password</label>
+            <div class="password-field">
+              <input class="input" id="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+              <button type="button" class="eye-toggle" data-target="password" aria-label="Show password">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row-between">
+            <button type="button" class="checkbox-btn" id="rememberDevice" role="checkbox" aria-checked="false">
+              <span class="checkbox-box">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="checkbox-label">Remember device</span>
+            </button>
+            <a href="#" class="link">Forgot password or account number?</a>
+          </div>
+
+          <button type="submit" class="btn-primary" id="loginBtn">Secure Sign In</button>
+        </form>
+
+        
+
+        <p class="switch-text">New here? <button type="button" id="toSignup">Open an account</button></p>
+      </div>
+
+      <!-- ============ SIGN UP VIEW ============ -->
+      <div id="signupView" style="display:none;">
+        <div class="header">
+          <div class="logo-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+          </div>
+          <h1 class="title">Register for online banking</h1>
+          <p class="subtitle">Link your existing account to create digital access</p>
+        </div>
+
+        <form id="signupForm">
+          <div>
+            <label class="label" for="fullName">Full Name</label>
+            <input class="input" id="fullName" type="text" placeholder="As per bank records" autocomplete="name" />
+          </div>
+
+          <div>
+            <label class="label" for="suAccountNumber">Account Number</label>
+            <input class="input numeric-only" id="suAccountNumber" type="text" inputmode="numeric" maxlength="10" placeholder="10-digit Account Number" autocomplete="off" />
+          </div>
+
+          <div>
+            <label class="label" for="suPhone">Registered Phone Number</label>
+            <div class="input-group">
+              <span class="prefix">+91</span>
+              <input class="numeric-only" id="suPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="98765 43210" autocomplete="off" />
+            </div>
+          </div>
+
+          <div>
+            <label class="label" for="email">Email Address</label>
+            <input class="input" id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+          </div>
+
+          <div>
+            <label class="label" for="suPassword">Create Password</label>
+            <div class="password-field">
+              <input class="input" id="suPassword" type="password" placeholder="At least 8 characters" autocomplete="new-password" />
+              <button type="button" class="eye-toggle" data-target="suPassword" aria-label="Show password">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="strength-meter" id="strengthMeter">
+              <div class="strength-bars">
+                <div class="strength-bar"></div>
+                <div class="strength-bar"></div>
+                <div class="strength-bar"></div>
+              </div>
+              <span class="strength-label" id="strengthLabel"></span>
+            </div>
+          </div>
+
+          <div>
+            <label class="label" for="confirmPassword">Confirm Password</label>
+            <div class="password-field">
+              <input class="input" id="confirmPassword" type="password" placeholder="Re-enter your password" autocomplete="new-password" />
+              <button type="button" class="eye-toggle" data-target="confirmPassword" aria-label="Show password">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <p class="error-text" id="mismatchText">Passwords don't match</p>
+          </div>
+
+          <div>
+            <button type="button" class="checkbox-btn align-start" id="termsCheckbox" role="checkbox" aria-checked="false">
+              <span class="checkbox-box">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="checkbox-label">I agree to the <b>Terms of Service</b> and <b>Privacy Policy</b></span>
+            </button>
+            <p class="error-text" id="termsError">Please accept the terms to continue</p>
+          </div>
+
+          <button type="submit" class="btn-primary" id="signupBtn">Create Account</button>
+        </form>
+
+        <p class="switch-text">Already have an account? <button type="button" id="toLogin">Sign in</button></p>
+      </div>
+
+    </div>
+
+    <!-- Trust & compliance footer -->
+    <div class="trust">
+      <p class="trust-line">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+        Secured with 256-bit banking encryption
+      </p>
+      <div class="trust-links">
+        <a href="#">Contact Support</a><span class="dot">·</span>
+        <a href="#">Privacy</a><span class="dot">·</span>
+        <a href="#">Security Guarantee</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const API_BASE_URL = 'http://127.0.0.1:5000/api';
+
+  var eyeSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var eyeOffSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>';
+  var spinnerSVG = '<svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
+  // ---- View switching ----
+  var loginView = document.getElementById('loginView');
+  var signupView = document.getElementById('signupView');
+
+  document.getElementById('toSignup').addEventListener('click', function () {
+    loginView.style.display = 'none';
+    signupView.style.display = 'block';
+  });
+  document.getElementById('toLogin').addEventListener('click', function () {
+    signupView.style.display = 'none';
+    loginView.style.display = 'block';
+  });
+
+  // ---- Login method segmented control ----
+  var tabAccount = document.getElementById('tabAccount');
+  var tabPhone = document.getElementById('tabPhone');
+  var fieldAccount = document.getElementById('fieldAccount');
+  var fieldPhone = document.getElementById('fieldPhone');
+
+  tabAccount.addEventListener('click', function () { setLoginMethod('account'); });
+  tabPhone.addEventListener('click', function () { setLoginMethod('phone'); });
+
+  function setLoginMethod(method) {
+    var isAccount = method === 'account';
+    tabAccount.classList.toggle('active', isAccount);
+    tabPhone.classList.toggle('active', !isAccount);
+    fieldAccount.style.display = isAccount ? 'block' : 'none';
+    fieldPhone.style.display = isAccount ? 'none' : 'block';
+  }
+
+  // ---- Numeric-only inputs ----
+  document.querySelectorAll('.numeric-only').forEach(function (input) {
+    input.addEventListener('input', function () {
+      input.value = input.value.replace(/\D/g, '');
+    });
+  });
+
+  // ---- Password show/hide toggles ----
+  document.querySelectorAll('.eye-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = document.getElementById(btn.getAttribute('data-target'));
+      var showing = input.type === 'password';
+      input.type = showing ? 'text' : 'password';
+      btn.innerHTML = showing ? eyeOffSVG : eyeSVG;
+      btn.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+    });
+  });
+
+  // ---- Custom checkboxes ----
+  document.querySelectorAll('.checkbox-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var checked = btn.getAttribute('aria-checked') === 'true';
+      btn.setAttribute('aria-checked', String(!checked));
+      btn.querySelector('.checkbox-box').classList.toggle('checked', !checked);
+    });
+  });
+
+  // ---- Password strength meter ----
+  var suPassword = document.getElementById('suPassword');
+  var strengthMeter = document.getElementById('strengthMeter');
+  var strengthBars = document.querySelectorAll('#strengthMeter .strength-bar');
+  var strengthLabel = document.getElementById('strengthLabel');
+  var strengthNames = ['', 'Weak', 'Fair', 'Strong'];
+  var strengthClasses = ['', 'weak', 'fair', 'strong'];
+
+  function getStrength(pw) {
+    var score = 0;
+    if (pw.length >= 8) score++;
+    if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+    if (/\d/.test(pw) && /[^A-Za-z0-9]/.test(pw)) score++;
+    return score;
+  }
+
+  suPassword.addEventListener('input', function () {
+    var val = suPassword.value;
+    if (!val) { strengthMeter.style.display = 'none'; checkMismatch(); return; }
+    strengthMeter.style.display = 'flex';
+    var score = getStrength(val);
+    strengthBars.forEach(function (bar, i) {
+      bar.className = 'strength-bar' + (score >= i + 1 ? ' ' + strengthClasses[score] : '');
+    });
+    strengthLabel.textContent = strengthNames[score];
+    checkMismatch();
+  });
+
+  // ---- Confirm password match ----
+  var confirmPassword = document.getElementById('confirmPassword');
+  var mismatchText = document.getElementById('mismatchText');
+
+  function checkMismatch() {
+    var mismatch = confirmPassword.value.length > 0 && confirmPassword.value !== suPassword.value;
+    mismatchText.style.display = mismatch ? 'block' : 'none';
+    confirmPassword.classList.toggle('input-error', mismatch);
+    return mismatch;
+  }
+  confirmPassword.addEventListener('input', checkMismatch);
+
+  // ---- Loading button helper ----
+  function setLoading(btn, loading, idleLabel, loadingLabel) {
+    btn.disabled = loading;
+    btn.innerHTML = loading ? spinnerSVG + '<span>' + loadingLabel + '</span>' : idleLabel;
+  }
+
+  // =========================================================
+  // ---- REAL BACKEND INTEGRATION (FLASK API CALLS) ----
+  // =========================================================
+
+  // 1. Sign In / Login Handler
+  var loginForm = document.getElementById('loginForm');
+  var loginBtn = document.getElementById('loginBtn');
+
+  loginForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (loginBtn.disabled) return;
+
+    const isAccount = tabAccount.classList.contains('active');
+    const credential = isAccount 
+      ? document.getElementById('accountNumber').value 
+      : document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+
+    if (!credential || !password) {
+      alert('Please fill in all login fields.');
+      return;
+    }
+
+    setLoading(loginBtn, true, 'Secure Sign In', 'Signing in securely…');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: credential, password: password })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Store user ID in session storage for dashboard use
+        sessionStorage.setItem('user_id', result.user.user_id);
+        alert(`Login Successful! Welcome, ${result.user.full_name}`);
+        // Redirect to dashboard page when built:
+        window.location.href = '/dashboard';
+      } else {
+        alert(result.error || 'Invalid credentials.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Server error: Unable to connect to Flask backend.');
+    } finally {
+      setLoading(loginBtn, false, 'Secure Sign In', '');
+    }
+  });
+
+  // 2. Registration / Sign Up Handler
+  var signupForm = document.getElementById('signupForm');
+  var signupBtn = document.getElementById('signupBtn');
+  var termsCheckbox = document.getElementById('termsCheckbox');
+  var termsError = document.getElementById('termsError');
+
+  signupForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    
+    var fullName = document.getElementById('fullName').value.trim();
+    var suAccountNumber = document.getElementById('suAccountNumber').value;
+    var suPhoneVal = document.getElementById('suPhone').value;
+    var email = document.getElementById('email').value.trim();
+    var password = suPassword.value;
+    var agreed = termsCheckbox.getAttribute('aria-checked') === 'true';
+    var mismatch = checkMismatch();
+
+    termsError.style.display = agreed ? 'none' : 'block';
+
+    var canSubmit = fullName && suAccountNumber && suPhoneVal &&
+      email && password && !mismatch && agreed;
+
+    if (signupBtn.disabled || !canSubmit) return;
+
+    setLoading(signupBtn, true, 'Create Account', 'Creating your account…');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: fullName,
+          email: email,
+          phone: suPhoneVal,
+          password: password,
+          account_number: suAccountNumber
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Account created successfully! You can now sign in.');
+        signupForm.reset();
+        signupView.style.display = 'none';
+        loginView.style.display = 'block';
+      } else {
+        alert(result.error || 'Registration failed.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Server error: Could not reach Flask server.');
+    } finally {
+      setLoading(signupBtn, false, 'Create Account', '');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

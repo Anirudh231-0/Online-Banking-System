@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Premium Banking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-500: #64748b;
+            --slate-700: #334155;
+            --slate-900: #0f172a;
+            --emerald-500: #10b981;
+            --rose-500: #f43f5e;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--slate-50);
+            color: var(--slate-900);
+        }
+        .navbar {
+            background: var(--slate-900);
+            color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h2 { margin: 0; font-size: 18px; }
+        .btn-logout {
+            background: var(--rose-500);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .card h3 { margin-top: 0; font-size: 18px; color: var(--slate-900); }
+        .balance { font-size: 32px; font-weight: 700; color: var(--emerald-500); margin: 8px 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 14px; margin-bottom: 6px; color: var(--slate-700); }
+        .form-group input {
+            width: 100%; padding: 10px 14px; border: 1px solid var(--slate-200);
+            border-radius: 8px; font-size: 14px; outline: none;
+        }
+        .btn-primary {
+            width: 100%; background: var(--slate-900); color: white;
+            padding: 12px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer;
+        }
+        .btn-primary:hover { background: #000; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--slate-200); font-size: 14px; }
+        th { color: var(--slate-500); font-weight: 500; }
+        .status-success { color: var(--emerald-500); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h2>Premium Banking</h2>
+        <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+
+    <div class="container">
+        <!-- Account Overview -->
+        <div class="card">
+            <h3>Welcome, <span id="userName">User</span></h3>
+            <p style="color: var(--slate-500); margin: 0;">Account Number: <strong id="userAcc" style="color: var(--slate-900);">ACC0000000</strong></p>
+            <div class="balance">$<span id="userBalance">0.00</span></div>
+        </div>
+
+        <div class="grid">
+            <!-- Fund Transfer Form -->
+            <div class="card">
+                <h3>Transfer Funds</h3>
+                <form id="transferForm">
+                    <div class="form-group">
+                        <label for="receiverAcc">Receiver's Account Number</label>
+                        <input type="text" id="receiverAcc" placeholder="10-digit Account Number" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount ($)</label>
+                        <input type="number" id="amount" step="0.01" min="1" placeholder="0.00" required />
+                    </div>
+                    <button type="submit" class="btn-primary" id="transferBtn">Send Money</button>
+                </form>
+            </div>
+
+            <!-- Quick Actions / Status -->
+            <div class="card">
+                <h3>Quick Information</h3>
+                <p style="font-size: 14px; color: var(--slate-500); line-height: 1.6;">
+                    Transfers are processed instantly through your 256-bit encrypted banking portal. Ensure receiver account numbers match bank records before submitting.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        const API_BASE_URL = 'http://127.0.0.1:5000/api';
+        const userId = sessionStorage.getItem('user_id');
+
+        // Security check: Redirect if not logged in
+        if (!userId) {
+            alert('Please sign in first.');
+            window.location.href = '/';
+            return;
+        }
+
+        // Fetch User Info
+        async function fetchProfile() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/user/${userId}`);
+                if (!res.ok) throw new Error('Failed to load user profile');
+                const user = await res.json();
+
+                document.getElementById('userName').textContent = user.full_name;
+                document.getElementById('userAcc').textContent = user.account_number;
+                document.getElementById('userBalance').textContent = parseFloat(user.balance).toFixed(2);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Handle Money Transfer
+        document.getElementById('transferForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const receiverAcc = document.getElementById('receiverAcc').value.trim();
+            const amount = document.getElementById('amount').value;
+            const transferBtn = document.getElementById('transferBtn');
+
+            transferBtn.disabled = true;
+            transferBtn.textContent = 'Processing…';
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/transfer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sender_id: parseInt(userId),
+                        receiver_account: receiverAcc,
+                        amount: amount
+                    })
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    alert(result.message);
+                    document.getElementById('transferForm').reset();
+                    fetchProfile(); // Refresh balance immediately
+                } else {
+                    alert(result.error || 'Transfer failed.');
+                }
+            } catch (err) {
+                alert('Server error processing transfer.');
+            } finally {
+                transferBtn.disabled = false;
+                transferBtn.textContent = 'Send Money';
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function () {
+            sessionStorage.removeItem('user_id');
+            window.location.href = '/';
+        });
+
+        // Initial Load
+        fetchProfile();
+    })();
+    </script>
+</body>
+</html>
